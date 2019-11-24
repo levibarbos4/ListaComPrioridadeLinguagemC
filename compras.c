@@ -25,6 +25,8 @@ void mostrar(listadecompras *lista);
 
 void remover(listadecompras *lista);
 
+void reiniciar(listadecompras *lista);
+
 int main() {
     setlocale(LC_ALL, "portuguese");
     int escolha;
@@ -39,7 +41,7 @@ int main() {
         puts("[1] Inserir");
         puts("[2] Remover");
         puts("[3] Mostrar");
-        puts("[4] zerar");
+        puts("[4] Reiniciar");
         puts("[0] Sair\n");
         printf("Escolha: ");
         scanf("%i", &escolha);
@@ -67,7 +69,7 @@ int main() {
 
             case 4:
                 system("cls");
-
+                reiniciar(&lista);
                 puts("Lista zerada!\n");
                 system("pause");
                 break;
@@ -157,5 +159,21 @@ void remover(listadecompras *lista) {
             aux->proximo->anterior = aux->anterior;
             free(aux);
         }
+    }
+}
+
+void reiniciar(listadecompras *lista) {
+    no *aux = lista->inicio;
+    if (aux == NULL)
+        return;
+    else {
+        while (aux != NULL) {
+            no *aux2 = aux;
+            aux = aux->proximo;
+            free(aux2);
+        }
+        free(aux);
+        lista->inicio = NULL;
+        lista->final = NULL;
     }
 }
