@@ -92,6 +92,9 @@ void inserir(listadecompras *lista) {
         lista->inicio = novo;
         lista->final = novo;
         return;
+    } else if (novo->categoria < aux->categoria) {
+       novo->proximo = aux;
+       lista->inicio = novo;
     } else {
         if (aux->proximo == NULL) {
             if (aux->categoria > novo->categoria) {
@@ -145,6 +148,7 @@ void mostrar(listadecompras *lista) {
         scanf("%i", &categoria);
         if (aux->categoria > categoria) {
             puts("Categoria vazia!");
+            system("cls");
             return;
         }
         while (aux != NULL) {
@@ -159,6 +163,7 @@ void mostrar(listadecompras *lista) {
 
 void remover(listadecompras *lista) {
     no *aux = lista->inicio;
+    no *aux2;
     char nomeremover[MAX];
 
     printf("Digite o nome para ser removido: ");
@@ -169,6 +174,9 @@ void remover(listadecompras *lista) {
     else {
         if (strcmp(nomeremover, aux->nome) == 0) {
             lista->inicio = aux->proximo;
+            puts("Item a ser removido: ");
+            printf("Nome: %s", aux->nome);
+            printf("Categoria: %i", aux->categoria);
             free(aux);
             return;
         }
@@ -180,8 +188,11 @@ void remover(listadecompras *lista) {
         if (aux->proximo == NULL) {
             puts("Não encontrado!");
         } else {
+            aux2 = aux->proximo;
             aux->proximo = aux->proximo->proximo;
-            free(aux->proximo);
+            printf("Nome: %s", aux2->nome);
+            printf("Categoria: %i", aux2->categoria);
+            free(aux2);
         }
     }
 }
