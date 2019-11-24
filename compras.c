@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <string.h>
 
 #define MAX 40
 
-struct no
-{
+struct no {
     char nome[MAX];
     int categoria;
     struct no *anterior;
@@ -13,8 +13,7 @@ struct no
 };
 typedef struct no no;
 
-struct listadecompras
-{
+struct listadecompras {
     no *inicio;
     no *final;
 };
@@ -24,16 +23,16 @@ void inserir(listadecompras *lista);
 
 void mostrar(listadecompras *lista);
 
-int main()
-{
+void remover(listadecompras *lista);
+
+int main() {
     setlocale(LC_ALL, "portuguese");
     int escolha;
     listadecompras lista;
     lista.inicio = NULL;
     lista.final = NULL;
 
-    while (1)
-    {
+    while (1) {
         escolha = -1;
         system("cls");
 
@@ -45,44 +44,41 @@ int main()
         printf("Escolha: ");
         scanf("%i", &escolha);
 
-        switch (escolha)
-        {
-        case 0:
-            exit(0);
-            break;
-        case 1:
-            system("cls");
-            inserir(&lista);
-            system("pause");
-            break;
-        case 2:
-            system("cls");
-            system("pause");
-            break;
-        case 3:
-            system("cls");
+        switch (escolha) {
+            case 0:
+                exit(0);
+            case 1:
+                system("cls");
+                inserir(&lista);
+                system("pause");
+                break;
+            case 2:
+                system("cls");
+                remover(&lista);
+                system("pause");
+                break;
+            case 3:
+                system("cls");
 
-            mostrar(&lista);
+                mostrar(&lista);
 
-            system("pause");
-            break;
+                system("pause");
+                break;
 
-        case 4:
-            system("cls");
+            case 4:
+                system("cls");
 
-            puts("Lista zerada!\n");
-            system("pause");
-            break;
-        default:
-            break;
+                puts("Lista zerada!\n");
+                system("pause");
+                break;
+            default:
+                break;
         }
     }
-    return 0;
 }
 
-void inserir(listadecompras *lista)
-{
-    no *novo = (no *)malloc(sizeof(no));
+void inserir(listadecompras *lista) {
+    no *novo = (no *) malloc(sizeof(no));
     no *aux = lista->inicio;
 
     printf("Digite o nome: ");
@@ -90,32 +86,25 @@ void inserir(listadecompras *lista)
     printf("Digite a categoria: ");
     scanf("%i", &novo->categoria);
 
-    if (aux == NULL)
-    {
+    if (aux == NULL) {
         novo->anterior = NULL;
         novo->proximo = NULL;
         lista->inicio = novo;
         lista->final = novo;
         return;
-    }
-    else
-    {
-        while (aux->proximo != NULL)
-        {
+    } else {
+        while (aux->proximo != NULL) {
             if (aux->proximo->categoria > novo->categoria)
                 break;
             aux = aux->proximo;
         }
 
-        if (aux->proximo == NULL)
-        {
+        if (aux->proximo == NULL) {
             novo->anterior = aux;
             aux->proximo = novo;
             novo->proximo = NULL;
             lista->final = aux;
-        }
-        else
-        {
+        } else {
             novo->proximo = aux->proximo;
             novo->proximo->anterior = novo;
             aux->proximo = novo;
@@ -125,19 +114,48 @@ void inserir(listadecompras *lista)
     }
 }
 
-void mostrar(listadecompras *lista)
-{
+void mostrar(listadecompras *lista) {
     no *aux = lista->inicio;
     int contador = 1;
     if (aux == NULL)
         puts("Lista Vazia!");
-    else
-    {
-        while (aux != NULL)
-        {
+    else {
+        while (aux != NULL) {
             printf("Número: %i Nome: %s Categoria: %i\n", contador, aux->nome, aux->categoria);
             aux = aux->proximo;
             contador++;
+        }
+    }
+}
+
+void remover(listadecompras *lista) {
+    no *aux = lista->inicio;
+    char nomeremover[MAX];
+
+    printf("Digite o nome para ser removido: ");
+    scanf("%s", &nomeremover);
+
+    if (aux == NULL)
+        printf("Lista vazia!");
+    else {
+        if (strcmp(nomeremover, aux->nome) == 0) {
+            lista->inicio = aux->proximo;
+            aux->proximo->anterior = NULL;
+            free(aux);
+            return;
+        }
+        while (aux->proximo != NULL) {
+            if (strcmp(nomeremover, aux->nome) == 0)
+                break;
+            aux = aux->proximo;
+        }
+        if (aux->proximo == NULL) {
+            aux->anterior->proximo = NULL;
+            free(aux);
+        } else {
+            aux->anterior->proximo = aux->proximo;
+            aux->proximo->anterior = aux->anterior;
+            free(aux);
         }
     }
 }
