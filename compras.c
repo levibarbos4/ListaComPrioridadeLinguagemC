@@ -1,37 +1,36 @@
-#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <locale.h>
 
-typedef struct no // estrutura que define um item
+#define MAX 40
+
+struct no
 {
-    char nome[100];
+    char nome[MAX];
     int categoria;
-    no *proximo;
-    no *anterior;
+    struct no *anterior;
+    struct no *proximo;
+};
+typedef struct no no;
 
-} no;
-
-typedef struct listadecompras // estrutura que define a lista de compras
+struct listadecompras
 {
     no *inicio;
-    no *categoria1;
-    no *categoria2;
-    no *categoria3;
-    no *categoria4;
+    no *final;
+};
+typedef struct listadecompras listadecompras;
 
-} listadecompras;
-
-no *criar();
 void inserir(listadecompras *lista);
-void iniciar(listadecompras *lista);
 
-int main(int argc, char const *argv[])
+void mostrar(listadecompras *lista);
+
+int main()
 {
     setlocale(LC_ALL, "portuguese");
-    int escolha, categoria;
-    char nome[100];
+    int escolha;
     listadecompras lista;
-    iniciar(&lista);
+    lista.inicio = NULL;
+    lista.final = NULL;
 
     while (1)
     {
@@ -58,14 +57,13 @@ int main(int argc, char const *argv[])
             break;
         case 2:
             system("cls");
-
-            printf("Nome: ");
-            scanf("%s", &nome);
-
             system("pause");
             break;
         case 3:
             system("cls");
+
+            mostrar(&lista);
+
             system("pause");
             break;
 
@@ -82,55 +80,64 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-no *criar()
+void inserir(listadecompras *lista)
 {
     no *novo = (no *)malloc(sizeof(no));
-    novo->anterior = NULL;
-    novo->proximo = NULL;
+    no *aux = lista->inicio;
 
     printf("Digite o nome: ");
     scanf("%s", &novo->nome);
     printf("Digite a categoria: ");
     scanf("%i", &novo->categoria);
 
-    return novo;
-}
-
-void inserir(listadecompras *lista)
-{
-    no *novo = criar();
-    no *aux;
-
-    if (lista->inicio == NULL)
+    if (aux == NULL)
     {
+        novo->anterior = NULL;
+        novo->proximo = NULL;
         lista->inicio = novo;
+        lista->final = novo;
         return;
     }
-    else if (novo->categoria == 4)
+    else
     {
-        aux = lista->categoria4;
-        aux->proximo = novo;
-        novo->anterior = aux;
-        return;
+        while (aux->proximo != NULL)
+        {
+            if (aux->proximo->categoria > novo->categoria)
+                break;
+            aux = aux->proximo;
+        }
+
+        if (aux->proximo == NULL)
+        {
+            novo->anterior = aux;
+            aux->proximo = novo;
+            novo->proximo = NULL;
+            lista->final = aux;
+        }
+        else
+        {
+            novo->proximo = aux->proximo;
+            novo->proximo->anterior = novo;
+            aux->proximo = novo;
+            novo->anterior = aux;
+            lista->final = novo;
+        }
     }
-
-    else if (novo->categoria == 1)
-        aux = lista->categoria1;
-    else if (novo->categoria == 2)
-        aux = lista->categoria2;
-    else if (novo->categoria == 3)
-        aux = lista->categoria3;
-
-    novo->proximo = aux->proximo;
-    aux->proximo->anterior = novo;
-    novo->anterior = aux;
 }
 
-void iniciar(listadecompras *lista)
+void mostrar(listadecompras *lista)
 {
-    lista->categoria1 = NULL;
-    lista->categoria2 = NULL;
-    lista->categoria3 = NULL;
-    lista->categoria4 = NULL;
-    lista->inicio = NULL;
+    no *aux = lista->inicio;
+    int contador = 1;
+    if (aux == NULL)
+        puts("Lista Vazia!");
+    else
+    {
+        while (aux != NULL)
+        {
+            printf("Número: %i Nome: %s Categoria: %i\n", contador, aux->nome, aux->categoria);
+            aux = aux->proximo;
+            contador++;
+        }
+    }
 }
