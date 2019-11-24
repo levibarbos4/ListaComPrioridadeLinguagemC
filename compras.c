@@ -8,7 +8,6 @@
 struct no {
     char nome[MAX];
     int categoria;
-    struct no *anterior;
     struct no *proximo;
 };
 typedef struct no no;
@@ -89,28 +88,36 @@ void inserir(listadecompras *lista) {
     scanf("%i", &novo->categoria);
 
     if (aux == NULL) {
-        novo->anterior = NULL;
         novo->proximo = NULL;
         lista->inicio = novo;
         lista->final = novo;
         return;
     } else {
-        while (aux->proximo != NULL) {
-            if (aux->proximo->categoria > novo->categoria)
-                break;
-            aux = aux->proximo;
-        }
-
         if (aux->proximo == NULL) {
-            novo->anterior = aux;
+            if (aux->categoria > novo->categoria) {
+                novo->proximo = aux;
+                aux->proximo = NULL;
+                lista->inicio = novo;
+                return;
+            }
             aux->proximo = novo;
             novo->proximo = NULL;
             lista->final = aux;
+            return;
         } else {
+            while (aux->proximo != NULL) {
+                if (aux->proximo->categoria > novo->categoria)
+                    break;
+                aux = aux->proximo;
+            }
+            if (aux->proximo == NULL) {
+                aux->proximo = novo;
+                novo->proximo = NULL;
+                lista->final = novo;
+                return;;
+            }
             novo->proximo = aux->proximo;
-            novo->proximo->anterior = novo;
             aux->proximo = novo;
-            novo->anterior = aux;
             lista->final = novo;
         }
     }
@@ -118,12 +125,32 @@ void inserir(listadecompras *lista) {
 
 void mostrar(listadecompras *lista) {
     no *aux = lista->inicio;
-    int contador = 1;
+    int escolha, categoria, contador = 1;
+
+    puts("[1] Mostrar tudo");
+    puts("[2] Mostrar por cadegoria\n\n");
+    printf("Escolha: ");
+    scanf("%i", &escolha);
+
     if (aux == NULL)
         puts("Lista Vazia!");
-    else {
+    else if (escolha == 1) {
         while (aux != NULL) {
             printf("Número: %i Nome: %s Categoria: %i\n", contador, aux->nome, aux->categoria);
+            aux = aux->proximo;
+            contador++;
+        }
+    } else if (escolha == 2) {
+        printf("Digite a categoria: ");
+        scanf("%i", &categoria);
+        if (aux->categoria > categoria) {
+            puts("Categoria vazia!");
+            return;
+        }
+        while (aux != NULL) {
+            if (aux->categoria > categoria) break;
+            else if (aux->categoria == categoria)
+                printf("Número: %i Nome: %s Categoria: %i\n", contador, aux->nome, aux->categoria);
             aux = aux->proximo;
             contador++;
         }
@@ -142,22 +169,19 @@ void remover(listadecompras *lista) {
     else {
         if (strcmp(nomeremover, aux->nome) == 0) {
             lista->inicio = aux->proximo;
-            aux->proximo->anterior = NULL;
             free(aux);
             return;
         }
         while (aux->proximo != NULL) {
-            if (strcmp(nomeremover, aux->nome) == 0)
+            if (strcmp(nomeremover, aux->proximo->nome) == 0)
                 break;
             aux = aux->proximo;
         }
         if (aux->proximo == NULL) {
-            aux->anterior->proximo = NULL;
-            free(aux);
+            puts("Não encontrado!");
         } else {
-            aux->anterior->proximo = aux->proximo;
-            aux->proximo->anterior = aux->anterior;
-            free(aux);
+            aux->proximo = aux->proximo->proximo;
+            free(aux->proximo);
         }
     }
 }
