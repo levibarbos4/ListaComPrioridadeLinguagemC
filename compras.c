@@ -18,7 +18,7 @@ struct listadecompras { // estrutura da lita de compras
 };
 typedef struct listadecompras listadecompras;
 
-// cabeÁalhos das funÁıes
+// cabe√ßalhos das fun√ß√µes
 
 void inserir(listadecompras *lista);
 
@@ -29,7 +29,7 @@ void remover(listadecompras *lista);
 void reiniciar(listadecompras *lista);
 
 int main() {
-    setlocale(LC_ALL, "portuguese"); // seta local como portuguÍs, desativar se for usar no linux
+    setlocale(LC_ALL, "portuguese"); // seta local como portugu√™s, desativar se for usar no linux
     int escolha;  // guarda a escolha do menu
 
     // inicia a lista
@@ -54,19 +54,19 @@ int main() {
                 exit(0);
             case 1:
                 system("cls");
-                inserir(&lista); // chama a funÁ„o de inserir
+                inserir(&lista); // chama a fun√ß√£o de inserir
                 system("pause");
                 puts("");
                 break;
             case 2:
                 system("cls");
-                remover(&lista); // chamma a funÁ„o para remover
+                remover(&lista); // chamma a fun√ß√£o para remover
                 system("pause");
                 puts("");
                 break;
             case 3:
                 system("cls");
-                mostrar(&lista); // chama a funÁ„o mostrar
+                mostrar(&lista); // chama a fun√ß√£o mostrar
                 puts("");
                 system("pause");
                 break;
@@ -85,10 +85,10 @@ int main() {
 }
 
 void inserir(listadecompras *lista) {
-    no *novo = (no *) malloc(sizeof(no));  // aloca um novo nÛ
+    no *novo = (no *) malloc(sizeof(no));  // aloca um novo n√≥
     no *aux = lista->inicio;  // cria uma auxiliar apontando para o primeiro da lista
 
-    // recebe os dados para o novo nÛ
+    // recebe os dados para o novo n√≥
     printf("Digite o nome: ");
     scanf("%s", &novo->nome);
     puts("[1] Mercearia");
@@ -104,18 +104,18 @@ void inserir(listadecompras *lista) {
         lista->inicio = novo;
         lista->final = novo;
         return;
-    } else if (novo->categoria < aux->categoria) { // insere no comeÁo caso a categoria seja a de maior prioridade
+    } else if (novo->categoria < aux->categoria) { // insere no come√ßo caso a categoria seja a de maior prioridade
         novo->proximo = aux;
         lista->inicio = novo;
     } else {
         if (aux->proximo == NULL) {
-            if (aux->categoria > novo->categoria) { // inserÁ„o pro prioridade
+            if (aux->categoria > novo->categoria) { // inser√ß√£o pro prioridade
                 novo->proximo = aux;
                 aux->proximo = NULL;
                 lista->inicio = novo;
                 return;
             }
-            aux->proximo = novo; // inserÁ„o no fim da lista
+            aux->proximo = novo; // inser√ß√£o no fim da lista
             novo->proximo = NULL;
             lista->final = aux;
             return;
@@ -139,7 +139,7 @@ void inserir(listadecompras *lista) {
 }
 
 void mostrar(listadecompras *lista) {
-    no *aux = lista->inicio; // no aux recebe o comeÁo
+    no *aux = lista->inicio; // no aux recebe o come√ßo
     int escolha, categoria, contador = 1;
 
     puts("[1] Mostrar tudo");
@@ -147,11 +147,11 @@ void mostrar(listadecompras *lista) {
     printf("Escolha: ");
     scanf("%i", &escolha);
 
-    if (aux == NULL) // verifica se a lista est· vazia
+    if (aux == NULL) // verifica se a lista est√° vazia
         puts("Lista Vazia!");
     else if (escolha == 1) { // mostra todos os elementos
         while (aux != NULL) {
-            printf("N˙mero: %i \t Nome: %s \t Categoria: %i\n", contador, aux->nome, aux->categoria);
+            printf("N√∫mero: %i \t Nome: %s \t Categoria: %i\n", contador, aux->nome, aux->categoria);
             aux = aux->proximo;
             contador++;
         }
@@ -166,7 +166,7 @@ void mostrar(listadecompras *lista) {
         while (aux != NULL) { // percorre a lista printando apenas a categoria desejada
             if (aux->categoria > categoria) break;
             else if (aux->categoria == categoria)
-                printf("N˙mero: %i \t Nome: %s \t Categoria: %i\n", contador, aux->nome, aux->categoria);
+                printf("N√∫mero: %i \t Nome: %s \t Categoria: %i\n", contador, aux->nome, aux->categoria);
             aux = aux->proximo;
             contador++;
         }
@@ -181,7 +181,7 @@ void remover(listadecompras *lista) {
     printf("Digite o nome para ser removido: ");
     scanf("%s", &nomeremover);  // recebe o nome do elemento a ser removido
 
-    if (aux == NULL)  // verifica se est· vazia a lista
+    if (aux == NULL)  // verifica se est√° vazia a lista
         printf("Lista vazia!");
     else {
         if (strcmp(nomeremover, aux->nome) == 0) {  // remove o primeiro elemento caso seja
@@ -192,13 +192,13 @@ void remover(listadecompras *lista) {
             free(aux);
             return;
         }
-        while (aux->proximo != NULL) {  // percorre atÈ achar o elemento desejado
+        while (aux->proximo != NULL) {  // percorre at√© achar o elemento desejado
             if (strcmp(nomeremover, aux->proximo->nome) == 0)
                 break;
             aux = aux->proximo;
         }
         if (aux->proximo == NULL) {  // retorna caso n encontre
-            puts("N„o encontrado!");
+            puts("N√£o encontrado!");
         } else {  // remove o elemento desejado
             aux2 = aux->proximo;
             aux->proximo = aux->proximo->proximo;
@@ -214,19 +214,19 @@ void reiniciar(listadecompras *lista) {
     if (aux == NULL)  // retorna se a lista estiver vazia
         return;
     else {
-        while (aux != NULL) {  // percorre deletando a lista atÈ achar o ˙ltimo elemento
+        while (aux != NULL) {  // percorre deletando a lista at√© achar o √∫ltimo elemento
             no *aux2 = aux;
             aux = aux->proximo;
             free(aux2);
         }
-        free(aux); // deleta o ˙ltimo elemento
-        lista->inicio = NULL;  // lista È reiniciada
+        free(aux); // deleta o √∫ltimo elemento
+        lista->inicio = NULL;  // lista √© reiniciada
         lista->final = NULL;
     }
 }
 
-// atenÁ„o, a lista tem prioridade por categoria
-// a menor categoria sempre ter· prioridade
-// n„o estando limitada as 4 categorias
-// final da lista n„o È necess·rio
-// se for compilar lembre-se de alterar a condificaÁ„o do arquivo para windows 1252
+// aten√ß√£o, a lista tem prioridade por categoria
+// a menor categoria sempre ter√° prioridade
+// n√£o estando limitada as 4 categorias
+// final da lista n√£o √© necess√°rio
+// se for compilar lembre-se de alterar a codifica√ß√£o do arquivo para windows 1252
